@@ -1,44 +1,33 @@
-## Input States
+## ECS.js
 
-Update input states every frame.
+Entity-Component-System
 
 ## Install
 
 ```bash
-npm install input.js
+npm install ecs.js
 ```
 
 ## Usage
 
 ```javascript
-let input = new Input();
+let engine = new Engine();
 
-function animate() {
-  if (input.keydown('w')) {
-    console.log('key w down');
-  }
+class Foo extends Component {}
+class FooSystem extends System {}
 
-  input.reset();
-  requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);
+engine.registerClass('Foo', Foo);
+engine.registerSystem('foo.sys', FooSystem, 'Foo');
+
+let ent = engine.createEntity();
+ent.addComp('Foo');
+
+engine.tick();
 ```
 
 ## Documentation
 
 TODO
-
-## TODO
-
- - options
-   - lock-filter (a filter function to decide if enter the lock state)
- - api
-   - installTouches()
- - extensions
-   - input.mouseclick(name, downupSpan, dragDistance)
-   - input.mouseclicks(name, clickCount, downupSpan, clickSpan, dragDistance)
-   - input.keyclick(name, downupSpan)
-   - input.keyclicks(name, clickCount, downupSpan, clickSpan)
 
 ## License
 

@@ -75,8 +75,8 @@ tap.test('engine', t => {
       }
     }
 
-    engine.registerSystem('Foo', new FooSystem(), 10);
-    engine.registerSystem('Bar', new BarSystem(), 20);
+    engine.registerSystem('foo.sys', FooSystem, 'Foo', 10);
+    engine.registerSystem('bar.sys', BarSystem, 'Bar', 20);
 
     let ent1 = engine.createEntity();
     ent1.addComp('Foo');
