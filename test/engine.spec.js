@@ -85,8 +85,8 @@ tap.test('engine', t => {
     engine.tick();
 
     t.equal(tickCount, 2);
-    t.equal(engine._systems[0]._items.length, 2);
-    t.equal(engine._systems[1]._items.length, 1);
+    t.equal(engine._systems[0]._components.length, 2);
+    t.equal(engine._systems[1]._components.length, 1);
 
     t.end();
   });
