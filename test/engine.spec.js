@@ -58,20 +58,38 @@ tap.test('engine', t => {
     class FooSystem extends System {
       constructor() {
         super();
+        this._components = [];
       }
 
       tick () {
         tickCount += 1;
+      }
+
+      add(comp) {
+        this._components.push(comp);
+      }
+
+      remove(comp) {
+        this._components.splice(this._components.indexOf(comp), 1);
       }
     }
 
     class BarSystem extends System {
       constructor() {
         super();
+        this._components = [];
       }
 
       tick () {
         tickCount += 1;
+      }
+
+      add(comp) {
+        this._components.push(comp);
+      }
+
+      remove(comp) {
+        this._components.splice(this._components.indexOf(comp), 1);
       }
     }
 
