@@ -54,6 +54,7 @@ tap.test('engine', t => {
     engine.registerClass('Bar', Bar);
 
     let tickCount = 0;
+    let postTickCount = 0;
 
     class FooSystem extends System {
       constructor() {
@@ -61,8 +62,15 @@ tap.test('engine', t => {
         this._components = [];
       }
 
+      finalize () {
+      }
+
       tick () {
         tickCount += 1;
+      }
+
+      postTick() {
+        postTickCount += 1;
       }
 
       add(comp) {
@@ -80,8 +88,15 @@ tap.test('engine', t => {
         this._components = [];
       }
 
+      finalize () {
+      }
+
       tick () {
         tickCount += 1;
+      }
+
+      postTick() {
+        postTickCount += 1;
       }
 
       add(comp) {
@@ -103,6 +118,7 @@ tap.test('engine', t => {
     engine.tick();
 
     t.equal(tickCount, 2);
+    t.equal(postTickCount, 2);
     t.equal(engine._systems[0]._components.length, 2);
     t.equal(engine._systems[1]._components.length, 1);
 
