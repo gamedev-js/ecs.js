@@ -35,6 +35,13 @@ tap.test('entity', t => {
     engine.tick();
     t.equal(enableCount, 4);
 
+    //entity parent change emit
+    let parentEnt = engine.createEntity('parentEnt');
+    engine.tick();
+    ent1._ancestorEnabled = false;
+    ent1.setParent(parentEnt);
+    t.equal(enableCount, 5);
+
     t.end();
   });
 
@@ -58,6 +65,17 @@ tap.test('entity', t => {
     ent1.setParent(null);
     engine.tick();
     t.equal(disableCount, 2);
+
+    //entity parent change emit
+    let ent2 = engine.createEntity('Entity2');
+    ent2.on('disable', function () {
+      disableCount += 1;
+    });
+    let parentEnt = engine.createEntity('parentEnt');
+    engine.tick();
+    parentEnt._ancestorEnabled = false;
+    ent2.setParent(parentEnt);
+    t.equal(disableCount, 3);
 
     t.end();
   });

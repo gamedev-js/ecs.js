@@ -49,7 +49,7 @@ tap.test('component', t => {
     let ent2 = ent1.clone();
     ent2.addComp('Foo');
     t.equal(initCount, 1);
-    
+
     let ent3 = ent1.deepClone();
     ent3.addComp('Foo');
     t.equal(initCount, 2);
@@ -88,7 +88,8 @@ tap.test('component', t => {
     let childEnt2 = engine.createEntity('childEnt2');
     engine.tick();
     childEnt2.setParent(ent1);
-    
+
+    //childEnt1 clone and deepClone
     childEnt1.addComp('Foo');
     t.equal(initCount, 14);
     childEnt1.clone();
@@ -96,6 +97,7 @@ tap.test('component', t => {
     childEnt1.deepClone();
     t.equal(initCount, 16);
 
+    //childEnt2 clone and deepClone
     childEnt2.addComp('Foo');
     t.equal(initCount, 17);
     childEnt2.clone();
@@ -119,18 +121,49 @@ tap.test('component', t => {
       }
     }
 
+    class Bar extends Foo {
+      constructor() {
+        super();
+      }
+
+      onEnable() {
+        onEnableCount += 1;
+      }
+    }
+
     let engine = new Engine();
     engine.registerClass('Foo', Foo);
+    engine.registerClass('Bar', Bar);
 
     //createComp trigger
-    let ent1 = engine.createEntity('Entity1');
-    let com1 = ent1.addComp('Foo');
+    let ent1 = engine.createEntity('Entity_1');
     engine.tick();
-    t.equal(onEnableCount, 1);
 
-    //entity enabled trigger
-    ent1._onEnableChanged();
+    ent1.addComp('Foo');
+    t.equal(onEnableCount, 1);
+    ent1.addComp('Bar');
     t.equal(onEnableCount, 2);
+
+    //clone entity trigger
+    ent1.clone();
+    engine.tick();
+    t.equal(onEnableCount, 4);
+
+    //deepClone entity trigger
+    ent1.deepClone();
+    engine.tick();
+    t.equal(onEnableCount, 6);
+
+    //entity enabled change trigger
+    ent1.enabled = false;
+    ent1.enabled = true;
+    t.equal(onEnableCount, 8);
+
+    //entity parent change trigger
+    let parentEnt = engine.createEntity('parentEnt');
+    engine.tick();
+    ent1._ancestorEnabled = false;
+    ent1.setParent(parentEnt);
 
     t.end();
   });
@@ -148,15 +181,44 @@ tap.test('component', t => {
       }
     }
 
+    class Bar extends Foo {
+      constructor() {
+        super();
+      }
+
+      onDisable() {
+        onDisableCount += 1;
+      }
+    }
+
     let engine = new Engine();
     engine.registerClass('Foo', Foo);
+    engine.registerClass('Bar', Bar);
     let ent1 = engine.createEntity('Entity1');
-    let com1 = ent1.addComp('Foo');
     engine.tick();
+    let com1 = ent1.addComp('Foo');
+    let com2 = ent1.addComp('Bar');
 
     // component destroy trigger
     com1.destroy();
     t.equal(onDisableCount, 1);
+
+    com2.destroy();
+    t.equal(onDisableCount, 2);
+
+    //enable change trigger
+    ent1.enabled = false;
+    t.equal(onDisableCount, 4);
+
+    //entity parent change trigger
+    let ent2 = engine.createEntity('Entity2');
+    ent2.addComp('Foo');
+    ent2.addComp('Bar');
+    let parentEnt = engine.createEntity('parentEnt');
+    engine.tick();
+    parentEnt._ancestorEnabled = false;
+    ent2.setParent(parentEnt);
+    t.equal(onDisableCount, 6);
 
     t.end();
   });
