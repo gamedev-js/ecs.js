@@ -1,5 +1,5 @@
 const tap = require('tap');
-const { Engine, System, Component, Entity } = require('../dist/ecs');
+const { Engine } = require('../dist/ecs');
 
 tap.test('entity', t => {
 
@@ -164,7 +164,7 @@ tap.test('entity', t => {
        *  |- [x] ent1_2
        *      |- [o] ent1_2_1
        *      |- [o] ent1_2_1
-       * 
+       *
        * ent1_1.setParent(ent0)
        * ent1_2.setParent(ent0)
        */
@@ -395,7 +395,7 @@ tap.test('entity', t => {
        *  |- [x] ent1_2
        *      |- [o] ent1_2_1
        *      |- [o] ent1_2_1
-       * 
+       *
        * ent1.setParent(ent0)
        */
 
