@@ -31,7 +31,7 @@
   "homepage": "https://github.com/gamedev-js/ecs.js/issues",
   "dependencies": {},
   "devDependencies": {
-    "event-sys": "^1.0.3",
+    "event-sys": "^1.1.0",
     "fs-jetpack": "^0.13.0",
     "memop": "^1.6.0",
     "rollup": "^0.41.4",

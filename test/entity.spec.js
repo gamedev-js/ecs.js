@@ -551,5 +551,45 @@ tap.test('entity', t => {
     t.end();
   });
 
+  tap.test('dispatch', t => {
+    let engine = new Engine();
+
+    let ent1 = engine.createEntity('ent1');
+    let ent1_1 = engine.createEntity('ent1_1');
+    let ent1_2 = engine.createEntity('ent1_2');
+    let ent1_1_1 = engine.createEntity('ent1_1_1');
+    let ent1_1_2 = engine.createEntity('ent1_1_2');
+    let ent1_2_1 = engine.createEntity('ent1_2_1');
+    let ent1_2_2 = engine.createEntity('ent1_2_2');
+    ent1_1.setParent(ent1);
+    ent1_2.setParent(ent1);
+    ent1_1_1.setParent(ent1_1);
+    ent1_1_2.setParent(ent1_1);
+    ent1_2_1.setParent(ent1_2);
+    ent1_2_2.setParent(ent1_2);
+
+    let eventCount = 0;
+    ent1_1.on('foobar', (event) => {
+      event.stop();
+      ++eventCount;
+    });
+
+    ent1_2.on('foobar', (event) => {
+      event.stop();
+      ++eventCount;
+    });
+
+    ent1.on('foobar', () => {
+      ++eventCount;
+    });
+
+    ent1_2_2.dispatch('foobar', {
+      bubbles: true
+    });
+    t.equal(eventCount, 1);
+
+    t.end();
+  });
+
   t.end();
 });
