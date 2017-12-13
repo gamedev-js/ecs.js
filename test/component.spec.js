@@ -462,6 +462,64 @@ tap.test('component', t => {
       t.end();
     });
 
+    tap.test('move the entity which has enabled false components from enable parent to a disable parent', t => {
+
+      /**
+       * [x] ent0
+       * [o] ent1
+       *  |- [o] ent1_1 <= (Foo.enabled = false)
+       *      |- [o] ent1_1_1 <= (Bar.enabled = false)
+       *
+       * ent1_1.setParent(ent0)
+       */
+
+      let fooDisableCount = 0;
+      let barDisableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+          this.enabled = false;
+        }
+
+        onEnable() {
+          fooDisableCount += 1;
+        }
+      }
+
+      class Bar extends Foo {
+        constructor() {
+          super();
+          this.enabled = false;
+        }
+
+        onEnable() {
+          barDisableCount += 1;
+        }
+      }
+
+      engine.registerClass('Foo', Foo);
+      engine.registerClass('Bar', Bar);
+      let ent0 = engine.createEntity('ent0');
+      let ent1 = engine.createEntity('ent1');
+      let ent1_1 = engine.createEntity('ent1_1');
+      let ent1_1_1 = engine.createEntity('ent1_1_1');
+      ent0.enabled = false;
+      ent1_1.setParent(ent1);
+      ent1_1_1.setParent(ent1_1);
+      engine.tick();
+
+      ent1_1.addComp('Foo');
+      ent1_1_1.addComp('Bar');
+
+      ent1_1.setParent(ent0);
+
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
+
+      t.end();
+    });
+
     t.end();
   });
 
