@@ -227,7 +227,7 @@ tap.test('component', t => {
        * [x] ent1
        *  |- [o] ent1_1 <= Foo
        *      |- [o] ent1_1_1 <= Bar
-       * 
+       *
        * ent1_1.setParent(ent0)
        */
 
@@ -319,7 +319,7 @@ tap.test('component', t => {
 
       foo.enabled = false;
       bar.enabled = false;
-      
+
       t.equal(fooDisableCount, 1);
       t.equal(fooDisableCount, 1);
 
@@ -413,7 +413,7 @@ tap.test('component', t => {
        * [o] ent1
        *  |- [o] ent1_1 <= Foo
        *      |- [o] ent1_1_1 <= Bar
-       * 
+       *
        * ent1_1.setParent(ent0)
        */
 

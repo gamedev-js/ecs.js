@@ -61,7 +61,7 @@ tap.test('system', t => {
       t.equal(addBarCount, 1);
 
       t.end();
-    })
+    });
 
     tap.test('system.add() during entity.clone()', t => {
       let addFooCount = 0;
@@ -123,14 +123,14 @@ tap.test('system', t => {
       t.equal(addBarCount, 1);
 
       t.end();
-    })
+    });
 
     tap.test('system.add() during entity.deepClone()', t => {
 
       /**
       * ent1 <= Foo
-      *  |- ent1_1 <= Bar 
-      * 
+      *  |- ent1_1 <= Bar
+      *
       * ent1.deepClone()
       */
 
@@ -195,10 +195,10 @@ tap.test('system', t => {
       t.equal(addBarCount, 1);
 
       t.end();
-    })
+    });
 
     t.end();
-  })
+  });
 
   tap.test('system.remove()', t => {
 
@@ -273,7 +273,7 @@ tap.test('system', t => {
       t.equal(rmFooCount, 1);
 
       t.end();
-    })
+    });
 
     tap.test('remove component during entity.destroy()', t => {
       let rmFooCount = 0;
@@ -340,10 +340,10 @@ tap.test('system', t => {
       t.equal(rmBarCount, 1);
 
       t.end();
-    })
+    });
 
     t.end();
-  })
+  });
 
   t.end();
-})
+});
