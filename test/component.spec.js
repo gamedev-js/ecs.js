@@ -425,7 +425,7 @@ tap.test('component', t => {
           super();
         }
 
-        onEnable() {
+        onDisable() {
           fooDisableCount += 1;
         }
       }
@@ -435,7 +435,7 @@ tap.test('component', t => {
           super();
         }
 
-        onEnable() {
+        onDisable() {
           barDisableCount += 1;
         }
       }
@@ -458,6 +458,281 @@ tap.test('component', t => {
 
       t.equal(fooDisableCount, 1);
       t.equal(barDisableCount, 1);
+
+      t.end();
+    });
+
+    t.end();
+  });
+
+  tap.test('change the entity status when entity has different status components', t => {
+    let engine = new Engine();
+
+    tap.test('ent0.enabled change from true to false', t => {
+
+      /**
+       *  [o] ent0 <= (Foo.enabled = false)
+       *  [o] ent0 <= (Bar.enabled = true)
+       *
+       * ent0.enabled change to false
+       */
+
+      let fooDisableCount = 0;
+      let barDisableCount = 0;
+      let fooEnableCount = 0;
+      let barEnableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+          this._enabled = false;
+        }
+
+        onEnable() {
+          fooEnableCount += 1;
+        }
+        onDisable() {
+          fooDisableCount += 1;
+        }
+      }
+
+      class Bar extends Component {
+        constructor() {
+          super();
+        }
+
+        onEnable() {
+          barEnableCount += 1;
+        }
+        onDisable() {
+          barDisableCount += 1;
+        }
+      }
+
+      engine.registerClass('Foo', Foo);
+      engine.registerClass('Bar', Bar);
+      let ent0 = engine.createEntity('ent0');
+      engine.tick();
+
+      ent0.addComp('Foo');
+      ent0.addComp('Bar');
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
+
+      ent0.enabled = false;
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 1);
+
+      t.end();
+    });
+
+    tap.test('ent0.enabled change from false to true', t => {
+
+      /**
+       *  [o] ent0 <= (Foo.enabled = false)
+       *  [o] ent0 <= (Bar.enabled = true)
+       *
+       * ent0.enabled change from false to true
+       */
+
+      let fooEnableCount = 0;
+      let barEnableCount = 0;
+      let fooDisableCount = 0;
+      let barDisableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+          this._enabled = false;
+        }
+
+        onEnable() {
+          fooEnableCount += 1;
+        }
+        onDisable() {
+          fooDisableCount += 1;
+        }
+      }
+
+      class Bar extends Component {
+        constructor() {
+          super();
+        }
+
+        onEnable() {
+          barEnableCount += 1;
+        }
+        onDisable() {
+          barDisableCount += 1;
+        }
+      }
+
+      engine.registerClass('Foo', Foo);
+      engine.registerClass('Bar', Bar);
+      let ent0 = engine.createEntity('ent0');
+      engine.tick();
+
+      ent0.addComp('Foo');
+      ent0.addComp('Bar');
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
+
+      ent0.enabled = false;
+      ent0.enabled = true;
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 2);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 1);
+
+      t.end();
+    });
+
+    tap.test('move the entity which has enabled false components from enable parent to a disable parent', t => {
+
+      /**
+       * [x] ent0
+       * [o] ent1
+       *  |- [o] ent1_1 <= (Foo.enabled = false)
+       *  |- [o] ent1_1 <= (Bar.enabled = true)
+       *
+       * ent1_1.setParent(ent0)
+       */
+
+      let fooEnableCount = 0;
+      let barEnableCount = 0;
+      let fooDisableCount = 0;
+      let barDisableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+          this._enabled = false;
+        }
+
+        onEnable() {
+          fooEnableCount += 1;
+        }
+        onDisable() {
+          fooDisableCount += 1;
+        }
+      }
+
+      class Bar extends Component {
+        constructor() {
+          super();
+        }
+
+        onEnable() {
+          barEnableCount += 1;
+        }
+        onDisable() {
+          barDisableCount += 1;
+        }
+      }
+
+      engine.registerClass('Foo', Foo);
+      engine.registerClass('Bar', Bar);
+      let ent0 = engine.createEntity('ent0');
+      let ent1 = engine.createEntity('ent1');
+      let ent1_1 = engine.createEntity('ent1_1');
+      ent0.enabled = false;
+      ent1_1.setParent(ent1);
+      engine.tick();
+
+      ent1_1.addComp('Foo');
+      ent1_1.addComp('Bar');
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
+
+      ent1_1.setParent(ent0);
+      
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 1);
+
+      t.end();
+    });
+
+    tap.test('move the entity which has enabled false components from enable parent to a disable parent', t => {
+
+      /**
+       * [o] ent0
+       * [x] ent1
+       *  |- [o] ent1_1 <= (Foo.enabled = false)
+       *  |- [o] ent1_1 <= (Bar.enabled = true)
+       *
+       * ent1_1.setParent(ent0)
+       */
+
+      let fooEnableCount = 0;
+      let barEnableCount = 0;
+      let fooDisableCount = 0;
+      let barDisableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+          this._enabled = false;
+        }
+
+        onEnable() {
+          fooEnableCount += 1;
+        }
+        onDisable() {
+          fooDisableCount += 1;
+        }
+      }
+
+      class Bar extends Component {
+        constructor() {
+          super();
+        }
+
+        onEnable() {
+          barEnableCount += 1;
+        }
+        onDisable() {
+          barDisableCount += 1;
+        }
+      }
+
+      engine.registerClass('Foo', Foo);
+      engine.registerClass('Bar', Bar);
+      let ent0 = engine.createEntity('ent0');
+      let ent1 = engine.createEntity('ent1');
+      let ent1_1 = engine.createEntity('ent1_1');
+      ent1.enabled = false;
+      ent1_1.setParent(ent1);
+      engine.tick();
+
+      ent1_1.addComp('Foo');
+      ent1_1.addComp('Bar');
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 0);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
+
+      ent1_1.setParent(ent0);
+
+      t.equal(fooEnableCount, 0);
+      t.equal(barEnableCount, 1);
+      t.equal(fooDisableCount, 0);
+      t.equal(barDisableCount, 0);
 
       t.end();
     });
