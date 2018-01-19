@@ -1,21 +1,21 @@
 const tap = require('tap');
-const { Engine } = require('../dist/ecs');
+const { App } = require('../dist/ecs');
 
 tap.test('entity', t => {
 
   tap.test('enable', t => {
-    let engine = new Engine();
+    let app = new App();
 
-    tap.test('engine.createEntity()', t => {
+    tap.test('app.createEntity()', t => {
       let enableCount = 0;
-      let ent1 = engine.createEntity('Entity1');
+      let ent1 = app.createEntity('Entity1');
 
       t.assert(ent1.enabled === true, 'The enabled is true for new entity');
 
       ent1.on('enable', function () {
         enableCount += 1;
       });
-      engine.tick();
+      app.tick();
 
       t.equal(enableCount, 1);
 
@@ -24,14 +24,14 @@ tap.test('entity', t => {
 
     tap.test('entity.enabled = true', t => {
       let enableCount = 0;
-      let ent1 = engine.createEntity('Entity1');
+      let ent1 = app.createEntity('Entity1');
 
       t.assert(ent1.enabled === true);
 
       ent1.on('enable', function () {
         enableCount += 1;
       });
-      engine.tick();
+      app.tick();
 
       t.equal(enableCount, 1);
 
@@ -46,7 +46,7 @@ tap.test('entity', t => {
 
     tap.test('entity.clone()', t => {
       let enableCount = 0;
-      let ent1 = engine.createEntity('Entity1');
+      let ent1 = app.createEntity('Entity1');
 
       let ent2 = ent1.clone();
 
@@ -55,7 +55,7 @@ tap.test('entity', t => {
       ent2.on('enable', function () {
         enableCount += 1;
       });
-      engine.tick();
+      app.tick();
 
       t.equal(enableCount, 1);
 
@@ -68,13 +68,13 @@ tap.test('entity', t => {
     });
 
     tap.test('entity.deepClone()', t => {
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_2 = engine.createEntity('ent1_2');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
-      let ent1_1_2 = engine.createEntity('ent1_1_2');
-      let ent1_2_1 = engine.createEntity('ent1_2_1');
-      let ent1_2_2 = engine.createEntity('ent1_2_2');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_2 = app.createEntity('ent1_2');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
+      let ent1_1_2 = app.createEntity('ent1_1_2');
+      let ent1_2_1 = app.createEntity('ent1_2_1');
+      let ent1_2_2 = app.createEntity('ent1_2_2');
       ent1_1.setParent(ent1);
       ent1_2.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
@@ -121,7 +121,7 @@ tap.test('entity', t => {
       ent2._children[1]._children[1].on('enable', function () {
         enableCount_2_2 += 1;
       });
-      engine.tick();
+      app.tick();
 
       t.equal(enableCount, 1);
       t.equal(enableCount_1, 1);
@@ -169,14 +169,14 @@ tap.test('entity', t => {
        * ent1_2.setParent(ent0)
        */
 
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_2 = engine.createEntity('ent1_2');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
-      let ent1_1_2 = engine.createEntity('ent1_1_2');
-      let ent1_2_1 = engine.createEntity('ent1_2_1');
-      let ent1_2_2 = engine.createEntity('ent1_2_2');
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_2 = app.createEntity('ent1_2');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
+      let ent1_1_2 = app.createEntity('ent1_1_2');
+      let ent1_2_1 = app.createEntity('ent1_2_1');
+      let ent1_2_2 = app.createEntity('ent1_2_2');
       ent1.enabled = false;
       ent1_2.enabled = false;
       ent1_1.setParent(ent1);
@@ -185,7 +185,7 @@ tap.test('entity', t => {
       ent1_1_2.setParent(ent1_1);
       ent1_2_1.setParent(ent1_2);
       ent1_2_2.setParent(ent1_2);
-      engine.tick();
+      app.tick();
 
       let enableCount_1 = 0;
       let enableCount_2 = 0;
@@ -214,7 +214,7 @@ tap.test('entity', t => {
 
       ent1_1.setParent(ent0);
       ent1_2.setParent(ent0);
-      engine.tick();
+      app.tick();
 
       t.equal(enableCount_1, 1);
       t.equal(enableCount_1_1, 1);
@@ -230,31 +230,31 @@ tap.test('entity', t => {
   });
 
   tap.test('disable', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('entity.destroy()', t => {
       let disableCount = 0;
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
       ent1.on('disable', function () {
         disableCount += 1;
       });
 
       ent1.destroy();
-      engine.tick();
+      app.tick();
       t.equal(disableCount, 1);
 
       t.end();
     });
 
     tap.test('entity.deepClone() then entity.destroy()', t => {
-      let ent1 = engine.createEntity();
-      let ent1_1 = engine.createEntity();
-      let ent1_2 = engine.createEntity();
-      let ent1_1_1 = engine.createEntity();
-      let ent1_1_2 = engine.createEntity();
-      let ent1_2_1 = engine.createEntity();
-      let ent1_2_2 = engine.createEntity();
+      let ent1 = app.createEntity();
+      let ent1_1 = app.createEntity();
+      let ent1_2 = app.createEntity();
+      let ent1_1_1 = app.createEntity();
+      let ent1_1_2 = app.createEntity();
+      let ent1_2_1 = app.createEntity();
+      let ent1_2_2 = app.createEntity();
       ent1_1.setParent(ent1);
       ent1_2.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
@@ -293,10 +293,10 @@ tap.test('entity', t => {
       ent2._children[1]._children[1].on('disable', function () {
         disableCount_2_2 += 1;
       });
-      engine.tick();
+      app.tick();
 
       ent2.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(disableCount, 1);
       t.equal(disableCount_1, 1);
@@ -311,8 +311,8 @@ tap.test('entity', t => {
 
     tap.test('entity.enabled = false', t => {
       let disableCount = 0;
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
       ent1.on('disable', function () {
         disableCount += 1;
       });
@@ -324,13 +324,13 @@ tap.test('entity', t => {
     });
 
     tap.test('entity.deepClone() then entity.enabled = false', t => {
-      let ent1 = engine.createEntity();
-      let ent1_1 = engine.createEntity();
-      let ent1_2 = engine.createEntity();
-      let ent1_1_1 = engine.createEntity();
-      let ent1_1_2 = engine.createEntity();
-      let ent1_2_1 = engine.createEntity();
-      let ent1_2_2 = engine.createEntity();
+      let ent1 = app.createEntity();
+      let ent1_1 = app.createEntity();
+      let ent1_2 = app.createEntity();
+      let ent1_1_1 = app.createEntity();
+      let ent1_1_2 = app.createEntity();
+      let ent1_2_1 = app.createEntity();
+      let ent1_2_2 = app.createEntity();
       ent1_1.setParent(ent1);
       ent1_2.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
@@ -369,7 +369,7 @@ tap.test('entity', t => {
       ent2._children[1]._children[1].on('disable', function () {
         disableCount_2_2 += 1;
       });
-      engine.tick();
+      app.tick();
 
       ent2.enabled = false;
 
@@ -399,14 +399,14 @@ tap.test('entity', t => {
        * ent1.setParent(ent0)
        */
 
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_2 = engine.createEntity('ent1_2');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
-      let ent1_1_2 = engine.createEntity('ent1_1_2');
-      let ent1_2_1 = engine.createEntity('ent1_2_1');
-      let ent1_2_2 = engine.createEntity('ent1_2_2');
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_2 = app.createEntity('ent1_2');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
+      let ent1_1_2 = app.createEntity('ent1_1_2');
+      let ent1_2_1 = app.createEntity('ent1_2_1');
+      let ent1_2_2 = app.createEntity('ent1_2_2');
 
       ent0.enabled = false;
       ent1_2.enabled = false;
@@ -417,7 +417,7 @@ tap.test('entity', t => {
       ent1_1_2.setParent(ent1_1);
       ent1_2_1.setParent(ent1_2);
       ent1_2_2.setParent(ent1_2);
-      engine.tick();
+      app.tick();
 
       let disableCount_1 = 0;
       let disableCount_2 = 0;
@@ -445,7 +445,7 @@ tap.test('entity', t => {
       });
 
       ent1.setParent(ent0);
-      engine.tick();
+      app.tick();
 
       t.equal(disableCount_1, 1);
       t.equal(disableCount_1_1, 1);
@@ -461,15 +461,15 @@ tap.test('entity', t => {
   });
 
   tap.test('ready', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('entity.create()', t => {
       let readyCount = 0;
-      let ent1 = engine.createEntity('Entity1');
+      let ent1 = app.createEntity('Entity1');
       ent1.on('ready', function () {
         readyCount += 1;
       });
-      engine.tick();
+      app.tick();
       t.equal(readyCount, 1);
 
       t.end();
@@ -477,26 +477,26 @@ tap.test('entity', t => {
 
     tap.test('entity.clone()', t => {
       let readyCount = 0;
-      let ent1 = engine.createEntity('Entity1');
+      let ent1 = app.createEntity('Entity1');
 
       let ent2 = ent1.clone();
       ent2.on('ready', function () {
         readyCount += 1;
       });
-      engine.tick();
+      app.tick();
       t.equal(readyCount, 1);
 
       t.end();
     });
 
     tap.test('entity.deepClone()', t => {
-      let ent1 = engine.createEntity();
-      let ent1_1 = engine.createEntity();
-      let ent1_2 = engine.createEntity();
-      let ent1_1_1 = engine.createEntity();
-      let ent1_1_2 = engine.createEntity();
-      let ent1_2_1 = engine.createEntity();
-      let ent1_2_2 = engine.createEntity();
+      let ent1 = app.createEntity();
+      let ent1_1 = app.createEntity();
+      let ent1_2 = app.createEntity();
+      let ent1_1_1 = app.createEntity();
+      let ent1_1_2 = app.createEntity();
+      let ent1_2_1 = app.createEntity();
+      let ent1_2_2 = app.createEntity();
       ent1_1.setParent(ent1);
       ent1_2.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
@@ -535,7 +535,7 @@ tap.test('entity', t => {
       ent2._children[1]._children[1].on('ready', function () {
         readyCount_2_2 += 1;
       });
-      engine.tick();
+      app.tick();
 
       t.equal(readyCount, 1);
       t.equal(readyCount_1, 1);
@@ -552,15 +552,15 @@ tap.test('entity', t => {
   });
 
   tap.test('dispatch', t => {
-    let engine = new Engine();
+    let app = new App();
 
-    let ent1 = engine.createEntity('ent1');
-    let ent1_1 = engine.createEntity('ent1_1');
-    let ent1_2 = engine.createEntity('ent1_2');
-    let ent1_1_1 = engine.createEntity('ent1_1_1');
-    let ent1_1_2 = engine.createEntity('ent1_1_2');
-    let ent1_2_1 = engine.createEntity('ent1_2_1');
-    let ent1_2_2 = engine.createEntity('ent1_2_2');
+    let ent1 = app.createEntity('ent1');
+    let ent1_1 = app.createEntity('ent1_1');
+    let ent1_2 = app.createEntity('ent1_2');
+    let ent1_1_1 = app.createEntity('ent1_1_1');
+    let ent1_1_2 = app.createEntity('ent1_1_2');
+    let ent1_2_1 = app.createEntity('ent1_2_1');
+    let ent1_2_2 = app.createEntity('ent1_2_2');
     ent1_1.setParent(ent1);
     ent1_2.setParent(ent1);
     ent1_1_1.setParent(ent1_1);

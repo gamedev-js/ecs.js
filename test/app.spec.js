@@ -1,7 +1,7 @@
 const tap = require('tap');
-const { Engine, System, Component } = require('../dist/ecs');
+const { App, System, Component } = require('../dist/ecs');
 
-tap.test('engine', t => {
+tap.test('app', t => {
 
   tap.test('registerClass', t => {
     class Foo extends Component {
@@ -16,22 +16,22 @@ tap.test('engine', t => {
       }
     }
 
-    let engine = new Engine();
-    engine.registerClass('Foo', Foo);
-    engine.registerClass('Bar', Bar);
+    let app = new App();
+    app.registerClass('Foo', Foo);
+    app.registerClass('Bar', Bar);
 
     let foo = new Foo();
     let bar = new Bar();
 
     t.equal(foo.constructor, Foo);
-    t.equal(engine.getClass('Foo'), Foo);
-    t.equal(engine.getClassName(foo), 'Foo');
-    t.equal(engine.getClassName(Foo), 'Foo');
+    t.equal(app.getClass('Foo'), Foo);
+    t.equal(app.getClassName(foo), 'Foo');
+    t.equal(app.getClassName(Foo), 'Foo');
 
     t.equal(bar.constructor, Bar);
-    t.equal(engine.getClass('Bar'), Bar);
-    t.equal(engine.getClassName(bar), 'Bar');
-    t.equal(engine.getClassName(Bar), 'Bar');
+    t.equal(app.getClass('Bar'), Bar);
+    t.equal(app.getClassName(bar), 'Bar');
+    t.equal(app.getClassName(Bar), 'Bar');
 
     t.end();
   });
@@ -49,9 +49,9 @@ tap.test('engine', t => {
       }
     }
 
-    let engine = new Engine();
-    engine.registerClass('Foo', Foo);
-    engine.registerClass('Bar', Bar);
+    let app = new App();
+    app.registerClass('Foo', Foo);
+    app.registerClass('Bar', Bar);
 
     let tickCount = 0;
     let postTickCount = 0;
@@ -108,19 +108,19 @@ tap.test('engine', t => {
       }
     }
 
-    engine.registerSystem('foo.sys', FooSystem, 'Foo', 10);
-    engine.registerSystem('bar.sys', BarSystem, 'Bar', 20);
+    app.registerSystem('foo.sys', FooSystem, 'Foo', 10);
+    app.registerSystem('bar.sys', BarSystem, 'Bar', 20);
 
-    let ent1 = engine.createEntity();
+    let ent1 = app.createEntity();
     ent1.addComp('Foo');
     ent1.addComp('Bar');
 
-    engine.tick();
+    app.tick();
 
     t.equal(tickCount, 2);
     t.equal(postTickCount, 2);
-    t.equal(engine._systems[0]._components.length, 2);
-    t.equal(engine._systems[1]._components.length, 1);
+    t.equal(app._systems[0]._components.length, 2);
+    t.equal(app._systems[1]._components.length, 1);
 
     t.end();
   });

@@ -11,18 +11,18 @@ npm install ecs.js
 ## Usage
 
 ```javascript
-let engine = new Engine();
+let app = new App();
 
 class Foo extends Component {}
 class FooSystem extends System {}
 
-engine.registerClass('Foo', Foo);
-engine.registerSystem('foo.sys', FooSystem, 'Foo');
+app.registerClass('Foo', Foo);
+app.registerSystem('foo.sys', FooSystem, 'Foo');
 
-let ent = engine.createEntity();
+let ent = app.createEntity();
 ent.addComp('Foo');
 
-engine.tick();
+app.tick();
 ```
 
 ## Documentation

@@ -1,10 +1,10 @@
 const tap = require('tap');
-const { Engine, System, Component } = require('../dist/ecs');
+const { App, Component } = require('../dist/ecs');
 
 tap.test('component', t => {
 
   tap.test('onInit', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('init component during entity.addcomp()', t => {
       let fooInitCount = 0;
@@ -30,10 +30,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -68,10 +68,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -110,14 +110,14 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
       ent1_1.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
-      engine.tick();
+      app.tick();
 
       ent1_1.addComp('Foo');
       ent1_1_1.addComp('Bar');
@@ -136,7 +136,7 @@ tap.test('component', t => {
   });
 
   tap.test('onEnable', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('create compontent during entity.addComp()', t => {
       let fooEnableCount = 0;
@@ -162,10 +162,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -200,10 +200,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -254,16 +254,16 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
       ent1.enabled = false;
       ent1_1.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
-      engine.tick();
+      app.tick();
 
       ent1_1.addComp('Foo');
       ent1_1_1.addComp('Bar');
@@ -283,7 +283,7 @@ tap.test('component', t => {
   });
 
   tap.test('onDisable', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('create Component and Component.enabled = false', t => {
       let fooDisableCount = 0;
@@ -309,10 +309,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       let foo = ent1.addComp('Foo');
       let bar = ent1.addComp('Bar');
@@ -350,10 +350,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -390,10 +390,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent1 = engine.createEntity('Entity1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent1 = app.createEntity('Entity1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
@@ -440,16 +440,16 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
-      let ent1_1_1 = engine.createEntity('ent1_1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
+      let ent1_1_1 = app.createEntity('ent1_1_1');
       ent0.enabled = false;
       ent1_1.setParent(ent1);
       ent1_1_1.setParent(ent1_1);
-      engine.tick();
+      app.tick();
 
       ent1_1.addComp('Foo');
       ent1_1_1.addComp('Bar');
@@ -466,7 +466,7 @@ tap.test('component', t => {
   });
 
   tap.test('change the entity status when entity has different status components', t => {
-    let engine = new Engine();
+    let app = new App();
 
     tap.test('ent0.enabled change from true to false', t => {
 
@@ -509,10 +509,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      app.tick();
 
       ent0.addComp('Foo');
       ent0.addComp('Bar');
@@ -573,10 +573,10 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      app.tick();
 
       ent0.addComp('Foo');
       ent0.addComp('Bar');
@@ -640,14 +640,14 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
       ent0.enabled = false;
       ent1_1.setParent(ent1);
-      engine.tick();
+      app.tick();
 
       ent1_1.addComp('Foo');
       ent1_1.addComp('Bar');
@@ -658,7 +658,7 @@ tap.test('component', t => {
       t.equal(barDisableCount, 0);
 
       ent1_1.setParent(ent0);
-      
+
       t.equal(fooEnableCount, 0);
       t.equal(barEnableCount, 1);
       t.equal(fooDisableCount, 0);
@@ -710,14 +710,14 @@ tap.test('component', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      let ent0 = engine.createEntity('ent0');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      let ent0 = app.createEntity('ent0');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
       ent1.enabled = false;
       ent1_1.setParent(ent1);
-      engine.tick();
+      app.tick();
 
       ent1_1.addComp('Foo');
       ent1_1.addComp('Bar');

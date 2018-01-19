@@ -1,8 +1,8 @@
 const tap = require('tap');
-const { Engine, System, Component } = require('../dist/ecs');
+const { App, System, Component } = require('../dist/ecs');
 
 tap.test('system', t => {
-  let engine = new Engine();
+  let app = new App();
 
   tap.test('system.add()', t => {
     tap.test('system.add() during entity.addComp()', t => {
@@ -41,21 +41,21 @@ tap.test('system', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      engine.registerSystem('foo.sys', FooSystem, 'Foo');
-      engine.registerSystem('bar.sys', BarSystem, 'Bar');
-      let ent1 = engine.createEntity('ent1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      app.registerSystem('foo.sys', FooSystem, 'Foo');
+      app.registerSystem('bar.sys', BarSystem, 'Bar');
+      let ent1 = app.createEntity('ent1');
+      app.tick();
 
       ent1.addComp('Foo');
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 1);
 
       addFooCount = 0;
       ent1.addComp('Bar');
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 1);
       t.equal(addBarCount, 1);
@@ -99,16 +99,16 @@ tap.test('system', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      engine.registerSystem('foo.sys', FooSystem, 'Foo');
-      engine.registerSystem('bar.sys', BarSystem, 'Bar');
-      let ent1 = engine.createEntity('ent1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      app.registerSystem('foo.sys', FooSystem, 'Foo');
+      app.registerSystem('bar.sys', BarSystem, 'Bar');
+      let ent1 = app.createEntity('ent1');
+      app.tick();
 
       ent1.addComp('Foo');
       ent1.addComp('Bar');
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 2);
       t.equal(addBarCount, 1);
@@ -117,7 +117,7 @@ tap.test('system', t => {
       addBarCount = 0;
 
       let ent2 = ent1.clone();
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 2);
       t.equal(addBarCount, 1);
@@ -169,18 +169,18 @@ tap.test('system', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      engine.registerSystem('foo.sys', FooSystem, 'Foo');
-      engine.registerSystem('bar.sys', BarSystem, 'Bar');
-      let ent1 = engine.createEntity('ent1');
-      let ent1_1 = engine.createEntity('ent1_1');
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      app.registerSystem('foo.sys', FooSystem, 'Foo');
+      app.registerSystem('bar.sys', BarSystem, 'Bar');
+      let ent1 = app.createEntity('ent1');
+      let ent1_1 = app.createEntity('ent1_1');
       ent1_1.setParent(ent1);
-      engine.tick();
+      app.tick();
 
       ent1.addComp('Foo');
       ent1_1.addComp('Bar');
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 2);
       t.equal(addBarCount, 1);
@@ -189,7 +189,7 @@ tap.test('system', t => {
       addBarCount = 0;
 
       let ent2 = ent1.deepClone();
-      engine.tick();
+      app.tick();
 
       t.equal(addFooCount, 2);
       t.equal(addBarCount, 1);
@@ -238,29 +238,29 @@ tap.test('system', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      engine.registerSystem('foo.sys', FooSystem, 'Foo');
-      engine.registerSystem('bar.sys', BarSystem, 'Bar');
-      let ent1 = engine.createEntity('ent1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      app.registerSystem('foo.sys', FooSystem, 'Foo');
+      app.registerSystem('bar.sys', BarSystem, 'Bar');
+      let ent1 = app.createEntity('ent1');
+      app.tick();
 
       let foo1 = ent1.addComp('Foo');
 
       foo1.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(rmFooCount, 1);
 
       rmFooCount = 0;
 
-      let ent2 = engine.createEntity('ent2');
-      engine.tick();
+      let ent2 = app.createEntity('ent2');
+      app.tick();
       let foo2 = ent2.addComp('Foo');
       let bar2 = ent2.addComp('Bar');
 
       bar2.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(rmFooCount, 1);
       t.equal(rmBarCount, 1);
@@ -268,7 +268,7 @@ tap.test('system', t => {
       rmFooCount = 0;
 
       foo2.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(rmFooCount, 1);
 
@@ -311,30 +311,30 @@ tap.test('system', t => {
         }
       }
 
-      engine.registerClass('Foo', Foo);
-      engine.registerClass('Bar', Bar);
-      engine.registerSystem('foo.sys', FooSystem, 'Foo');
-      engine.registerSystem('bar.sys', BarSystem, 'Bar');
-      let ent1 = engine.createEntity('ent1');
-      engine.tick();
+      app.registerClass('Foo', Foo);
+      app.registerClass('Bar', Bar);
+      app.registerSystem('foo.sys', FooSystem, 'Foo');
+      app.registerSystem('bar.sys', BarSystem, 'Bar');
+      let ent1 = app.createEntity('ent1');
+      app.tick();
 
       ent1.addComp('Foo');
 
       ent1.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(rmFooCount, 1);
 
       rmFooCount = 0;
       rmBarCount = 0;
 
-      let ent2 = engine.createEntity('ent2');
-      engine.tick();
+      let ent2 = app.createEntity('ent2');
+      app.tick();
       ent2.addComp('Foo');
       ent2.addComp('Bar');
 
       ent2.destroy();
-      engine.tick();
+      app.tick();
 
       t.equal(rmFooCount, 2);
       t.equal(rmBarCount, 1);
