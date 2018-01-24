@@ -4,18 +4,15 @@ const { App, System, Component } = require('../dist/ecs');
 tap.test('system', t => {
   let app = new App();
 
-  tap.test('system.add()', t => {
-    tap.test('system.add() during entity.addComp()', t => {
-      let addFooCount = 0;
-      let addBarCount = 0;
-
+  tap.test('system reference', t => {
+    tap.test('system reference during entity.addComp()', t => {
       class Foo extends Component {
         constructor() {
           super();
         }
       }
 
-      class Bar extends Foo {
+      class Bar extends Component {
         constructor() {
           super();
         }
@@ -25,19 +22,11 @@ tap.test('system', t => {
         constructor() {
           super();
         }
-
-        add() {
-          addFooCount += 1;
-        }
       }
 
       class BarSystem extends System {
         constructor() {
           super();
-        }
-
-        add() {
-          addBarCount += 1;
         }
       }
 
@@ -48,32 +37,27 @@ tap.test('system', t => {
       let ent1 = app.createEntity('ent1');
       app.tick();
 
-      ent1.addComp('Foo');
+      let foo = ent1.addComp('Foo');
       app.tick();
 
-      t.equal(addFooCount, 1);
+      t.equal(foo._system._id, 'foo.sys');
 
-      addFooCount = 0;
-      ent1.addComp('Bar');
+      let bar = ent1.addComp('Bar');
       app.tick();
 
-      t.equal(addFooCount, 1);
-      t.equal(addBarCount, 1);
+      t.equal(bar._system._id, 'bar.sys');
 
       t.end();
     });
 
-    tap.test('system.add() during entity.clone()', t => {
-      let addFooCount = 0;
-      let addBarCount = 0;
-
+    tap.test('system referenced during entity.clone()', t => {
       class Foo extends Component {
         constructor() {
           super();
         }
       }
 
-      class Bar extends Foo {
+      class Bar extends Component {
         constructor() {
           super();
         }
@@ -83,19 +67,11 @@ tap.test('system', t => {
         constructor() {
           super();
         }
-
-        add() {
-          addFooCount += 1;
-        }
       }
 
       class BarSystem extends System {
         constructor() {
           super();
-        }
-
-        add() {
-          addBarCount += 1;
         }
       }
 
@@ -106,26 +82,23 @@ tap.test('system', t => {
       let ent1 = app.createEntity('ent1');
       app.tick();
 
-      ent1.addComp('Foo');
-      ent1.addComp('Bar');
+      let foo = ent1.addComp('Foo');
+      let bar = ent1.addComp('Bar');
       app.tick();
 
-      t.equal(addFooCount, 2);
-      t.equal(addBarCount, 1);
-
-      addFooCount = 0;
-      addBarCount = 0;
+      t.equal(foo._system._id, 'foo.sys');
+      t.equal(bar._system._id, 'bar.sys');
 
       let ent2 = ent1.clone();
       app.tick();
 
-      t.equal(addFooCount, 2);
-      t.equal(addBarCount, 1);
+      t.equal(ent2.getComp('Foo')._system._id, 'foo.sys');
+      t.equal(ent2.getComp('Bar')._system._id, 'bar.sys');
 
       t.end();
     });
 
-    tap.test('system.add() during entity.deepClone()', t => {
+    tap.test('system referenced during entity.deepClone()', t => {
 
       /**
       * ent1 <= Foo
@@ -134,16 +107,13 @@ tap.test('system', t => {
       * ent1.deepClone()
       */
 
-      let addFooCount = 0;
-      let addBarCount = 0;
-
       class Foo extends Component {
         constructor() {
           super();
         }
       }
 
-      class Bar extends Foo {
+      class Bar extends Component {
         constructor() {
           super();
         }
@@ -153,19 +123,11 @@ tap.test('system', t => {
         constructor() {
           super();
         }
-
-        add() {
-          addFooCount += 1;
-        }
       }
 
       class BarSystem extends System {
         constructor() {
           super();
-        }
-
-        add() {
-          addBarCount += 1;
         }
       }
 
@@ -178,21 +140,18 @@ tap.test('system', t => {
       ent1_1.setParent(ent1);
       app.tick();
 
-      ent1.addComp('Foo');
-      ent1_1.addComp('Bar');
+      let foo = ent1.addComp('Foo');
+      let bar = ent1_1.addComp('Bar');
       app.tick();
 
-      t.equal(addFooCount, 2);
-      t.equal(addBarCount, 1);
-
-      addFooCount = 0;
-      addBarCount = 0;
+      t.equal(foo._system._id, 'foo.sys');
+      t.equal(bar._system._id, 'bar.sys');
 
       let ent2 = ent1.deepClone();
       app.tick();
 
-      t.equal(addFooCount, 2);
-      t.equal(addBarCount, 1);
+      t.equal(ent2.getComp('Foo')._system._id, 'foo.sys');
+      t.equal(ent2.children[0].getComp('Bar')._system._id, 'bar.sys');
 
       t.end();
     });
@@ -200,19 +159,16 @@ tap.test('system', t => {
     t.end();
   });
 
-  tap.test('system.remove()', t => {
+  tap.test('system dereference', t => {
 
     tap.test('remove component during component.destroy()', t => {
-      let rmFooCount = 0;
-      let rmBarCount = 0;
-
       class Foo extends Component {
         constructor() {
           super();
         }
       }
 
-      class Bar extends Foo {
+      class Bar extends Component {
         constructor() {
           super();
         }
@@ -222,19 +178,11 @@ tap.test('system', t => {
         constructor() {
           super();
         }
-
-        remove() {
-          rmFooCount += 1;
-        }
       }
 
       class BarSystem extends System {
         constructor() {
           super();
-        }
-
-        remove() {
-          rmBarCount += 1;
         }
       }
 
@@ -250,9 +198,7 @@ tap.test('system', t => {
       foo1.destroy();
       app.tick();
 
-      t.equal(rmFooCount, 1);
-
-      rmFooCount = 0;
+      t.equal(foo1._system, null);
 
       let ent2 = app.createEntity('ent2');
       app.tick();
@@ -262,30 +208,25 @@ tap.test('system', t => {
       bar2.destroy();
       app.tick();
 
-      t.equal(rmFooCount, 1);
-      t.equal(rmBarCount, 1);
-
-      rmFooCount = 0;
+      t.equal(foo2._system._id, 'foo.sys');
+      t.equal(bar2._system, null);
 
       foo2.destroy();
       app.tick();
 
-      t.equal(rmFooCount, 1);
+      t.equal(foo2._system, null);
 
       t.end();
     });
 
     tap.test('remove component during entity.destroy()', t => {
-      let rmFooCount = 0;
-      let rmBarCount = 0;
-
       class Foo extends Component {
         constructor() {
           super();
         }
       }
 
-      class Bar extends Foo {
+      class Bar extends Component {
         constructor() {
           super();
         }
@@ -295,19 +236,11 @@ tap.test('system', t => {
         constructor() {
           super();
         }
-
-        remove() {
-          rmFooCount += 1;
-        }
       }
 
       class BarSystem extends System {
         constructor() {
           super();
-        }
-
-        remove() {
-          rmBarCount += 1;
         }
       }
 
@@ -315,29 +248,18 @@ tap.test('system', t => {
       app.registerClass('Bar', Bar);
       app.registerSystem('foo.sys', FooSystem, 'Foo');
       app.registerSystem('bar.sys', BarSystem, 'Bar');
+
       let ent1 = app.createEntity('ent1');
       app.tick();
 
-      ent1.addComp('Foo');
+      let foo = ent1.addComp('Foo');
+      let bar = ent1.addComp('Bar');
 
       ent1.destroy();
       app.tick();
 
-      t.equal(rmFooCount, 1);
-
-      rmFooCount = 0;
-      rmBarCount = 0;
-
-      let ent2 = app.createEntity('ent2');
-      app.tick();
-      ent2.addComp('Foo');
-      ent2.addComp('Bar');
-
-      ent2.destroy();
-      app.tick();
-
-      t.equal(rmFooCount, 2);
-      t.equal(rmBarCount, 1);
+      t.equal(foo._system, null);
+      t.equal(bar._system, null);
 
       t.end();
     });

@@ -6,7 +6,7 @@ tap.test('component', t => {
   tap.test('onInit', t => {
     let app = new App();
 
-    tap.test('init component during entity.addcomp()', t => {
+    tap.test('init component during entity.addComp()', t => {
       let fooInitCount = 0;
       let barInitCount = 0;
 
@@ -138,7 +138,7 @@ tap.test('component', t => {
   tap.test('onEnable', t => {
     let app = new App();
 
-    tap.test('create compontent during entity.addComp()', t => {
+    tap.test('create component during entity.addComp()', t => {
       let fooEnableCount = 0;
       let barEnableCount = 0;
 
@@ -285,7 +285,37 @@ tap.test('component', t => {
   tap.test('onDisable', t => {
     let app = new App();
 
-    tap.test('create Component and Component.enabled = false', t => {
+    tap.test('add Component to a new entity and set Component.enabled = false', t => {
+      let fooDisableCount = 0;
+      let fooEnableCount = 0;
+
+      class Foo extends Component {
+        constructor() {
+          super();
+        }
+
+        onEnable() {
+          fooEnableCount += 1;
+        }
+
+        onDisable() {
+          fooDisableCount += 1;
+        }
+      }
+      app.registerClass('Foo', Foo);
+
+      let ent1 = app.createEntity('Entity1');
+      let foo = ent1.addComp('Foo');
+      foo.enabled = false;
+      app.tick();
+
+      t.equal(fooEnableCount, 0);
+      t.equal(fooDisableCount, 0);
+
+      t.end();
+    });
+
+    tap.test('add Component to exists entity and set Component.enabled = false', t => {
       let fooDisableCount = 0;
       let barDisableCount = 0;
 
@@ -321,7 +351,7 @@ tap.test('component', t => {
       bar.enabled = false;
 
       t.equal(fooDisableCount, 1);
-      t.equal(fooDisableCount, 1);
+      t.equal(barDisableCount, 1);
 
       t.end();
     });
@@ -361,7 +391,7 @@ tap.test('component', t => {
       ent1.destroy();
 
       t.equal(fooDisableCount, 1);
-      t.equal(fooDisableCount, 1);
+      t.equal(barDisableCount, 1);
 
       t.end();
     });

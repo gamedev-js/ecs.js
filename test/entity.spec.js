@@ -591,5 +591,26 @@ tap.test('entity', t => {
     t.end();
   });
 
+  tap.test('destroy in the same frame', t => {
+    let enableCount = 0;
+    let disableCount = 0;
+
+    let app = new App();
+    let ent1 = app.createEntity('Entity1');
+    ent1.on('enable', function () {
+      enableCount += 1;
+    });
+    ent1.on('disable', function () {
+      disableCount += 1;
+    });
+
+    ent1.destroy();
+    app.tick();
+
+    t.equal(enableCount, 0);
+    t.equal(disableCount, 0);
+    t.end();
+  });
+
   t.end();
 });

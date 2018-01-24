@@ -41,6 +41,14 @@ tap.test('app', t => {
       constructor() {
         super();
       }
+
+      onInit () {
+        this._system.add(this);
+      }
+
+      onDestroy () {
+        this._system.remove(this);
+      }
     }
 
     class Bar extends Foo {
@@ -62,33 +70,7 @@ tap.test('app', t => {
         this._components = [];
       }
 
-      finalize () {
-      }
-
-      tick () {
-        tickCount += 1;
-      }
-
-      postTick() {
-        postTickCount += 1;
-      }
-
-      add(comp) {
-        this._components.push(comp);
-      }
-
-      remove(comp) {
-        this._components.splice(this._components.indexOf(comp), 1);
-      }
-    }
-
-    class BarSystem extends System {
-      constructor() {
-        super();
-        this._components = [];
-      }
-
-      finalize () {
+      init () {
       }
 
       tick () {
@@ -109,7 +91,6 @@ tap.test('app', t => {
     }
 
     app.registerSystem('foo.sys', FooSystem, 'Foo', 10);
-    app.registerSystem('bar.sys', BarSystem, 'Bar', 20);
 
     let ent1 = app.createEntity();
     ent1.addComp('Foo');
@@ -117,10 +98,9 @@ tap.test('app', t => {
 
     app.tick();
 
-    t.equal(tickCount, 2);
-    t.equal(postTickCount, 2);
+    t.equal(tickCount, 1);
+    t.equal(postTickCount, 1);
     t.equal(app._systems[0]._components.length, 2);
-    t.equal(app._systems[1]._components.length, 1);
 
     t.end();
   });
