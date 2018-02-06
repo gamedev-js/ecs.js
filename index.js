@@ -1,3 +1,4 @@
+export { default as ComponentEvent } from './lib/event';
 export { default as Component } from './lib/component';
 export { default as Entity } from './lib/entity';
 export { default as Level } from './lib/level';

@@ -478,9 +478,9 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
-event-sys@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/event-sys/-/event-sys-1.1.0.tgz#eaf64361acf885a7e6a8eae3e7cc3acfc9aed23a"
+event-sys@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/event-sys/-/event-sys-1.1.3.tgz#55bc5bb15f8f54da8e3576f80c37833050b572f1"
 
 events-to-array@^1.0.1:
   version "1.1.2"
