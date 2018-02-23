@@ -84,13 +84,13 @@ tap.test('entity', t => {
 
       let ent2 = ent1.deepClone();
 
-      t.assert(ent2.enabled === true)
-      t.assert(ent2._children[0].enabled === true)
-      t.assert(ent2._children[1].enabled === true)
-      t.assert(ent2._children[0]._children[0].enabled === true)
-      t.assert(ent2._children[0]._children[1].enabled === true)
-      t.assert(ent2._children[1]._children[0].enabled === true)
-      t.assert(ent2._children[1]._children[1].enabled === true)
+      t.assert(ent2.enabled === true);
+      t.assert(ent2._children[0].enabled === true);
+      t.assert(ent2._children[1].enabled === true);
+      t.assert(ent2._children[0]._children[0].enabled === true);
+      t.assert(ent2._children[0]._children[1].enabled === true);
+      t.assert(ent2._children[1]._children[0].enabled === true);
+      t.assert(ent2._children[1]._children[1].enabled === true);
 
       let enableCount = 0;
       let enableCount_1 = 0;
