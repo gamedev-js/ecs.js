@@ -7,13 +7,13 @@ tap.test('component.schema', t => {
 
     app.registerType('number', {
       default: 0,
-      parse(data) {
+      parse(app, data) {
         return data;
       },
     });
     app.registerType('string', {
       default: '',
-      parse(data) {
+      parse(app, data) {
         return data;
       }
     });
@@ -45,7 +45,7 @@ tap.test('component.schema', t => {
 
     app.registerType('number', {
       default: 0,
-      parse(data) {
+      parse(app, data) {
         if (typeof data === 'string') {
           return parseInt(data);
         }
@@ -54,7 +54,7 @@ tap.test('component.schema', t => {
     });
     app.registerType('string', {
       default: '',
-      parse(data) {
+      parse(app, data) {
         return data;
       }
     });
@@ -64,9 +64,9 @@ tap.test('component.schema', t => {
       }
     }
     Foo.schema = {
-      names: { type: 'string', default: [] },
-      ids: { type: 'number', default: [10, 20, 30]  },
-      ids2: { type: 'number', default: ['11', '21', '31']  },
+      names: { type: 'string', default: [], array: true },
+      ids: { type: 'number', default: [10, 20, 30], array: true  },
+      ids2: { type: 'number', default: ['11', '21', '31'], array: true  },
     };
 
     app.registerClass('Foo', Foo);
@@ -85,7 +85,7 @@ tap.test('component.schema', t => {
 
     app.registerType('number', {
       default: 0,
-      parse(data) {
+      parse(app, data) {
         if (typeof data === 'string') {
           return parseInt(data);
         }
@@ -94,7 +94,7 @@ tap.test('component.schema', t => {
     });
     app.registerType('string', {
       default: '',
-      parse(data) {
+      parse(app, data) {
         return data;
       }
     });
