@@ -79,6 +79,7 @@ tap.test('component', t => {
       t.equal(barInitCount, 1);
 
       let ent2 = ent1.clone();
+      app.tick();
 
       t.equal(fooInitCount, 2);
       t.equal(barInitCount, 2);
@@ -125,6 +126,7 @@ tap.test('component', t => {
       t.equal(barInitCount, 1);
 
       let ent2 = ent1.deepClone();
+      app.tick();
 
       t.equal(fooInitCount, 2);
       t.equal(barInitCount, 2);
